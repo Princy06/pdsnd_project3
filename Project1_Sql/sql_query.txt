@@ -1,0 +1,40 @@
+1)Write a query which fetch length of movie and 
+  number of movies of that particular length in our query length of movie is less the 60 .
+ans:-SELECT
+  f.length AS length_of_movie,
+  COUNT(f.length) AS no_of_movies_of_that_len
+FROM film_actor fa
+JOIN actor a
+  ON fa.actor_id = a.actor_id
+JOIN film f
+  ON f.film_id = fa.film_id
+WHERE f.length < 60
+GROUP BY f.length
+2)Write a query you to create a count of movies in each of the 4 filmlen_groups: 
+        1 hour or less,Between 1-2 hours, Between 2-3 hours, More than 3 hours.
+ans: -SELECT    DISTINCT(filmlen_groups),
+          COUNT(title) OVER (PARTITION BY filmlen_groups) AS filmcount_bylencat
+    FROM  
+         (SELECT title,length,
+          CASE WHEN length <= 60 THEN '1 hour or less'
+          WHEN length > 60 AND length <= 120 THEN 'Between 1-2 hours'
+          WHEN length > 120 AND length <= 180 THEN 'Between 2-3 hours'
+          ELSE 'More than 3 hours' END AS filmlen_groups
+          FROM film ) t1
+ORDER BY  filmlen_groups
+3)write a query which divide total movie as per their rating.
+ans:- select rating,count(title)
+       from film
+   group by rating;
+4)Write a sql query to print the top 5 names of the actor who did maximum movies in descending order .
+ans:-SELECT
+    a.first_name,
+      count( f.title)
+FROM   film_actor fa
+JOIN   actor a
+ON     fa.actor_id = a.actor_id
+JOIN   film f
+ON     f.film_id = fa.film_id
+group by a.first_name
+order by count desc
+limit 5
